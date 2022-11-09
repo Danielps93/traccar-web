@@ -15,7 +15,6 @@ import EventsDrawer from './EventsDrawer';
 import useFilter from './useFilter';
 import MainToolbar from './MainToolbar';
 import MainMap from './MainMap';
-import { useAttributePreference } from '../common/util/preferences';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,17 +63,17 @@ const MainPage = () => {
 
   const desktop = useMediaQuery(theme.breakpoints.up('md'));
 
-  const mapOnSelect = useAttributePreference('mapOnSelect', true);
+  const [mapOnSelect] = usePersistedState('mapOnSelect', true);
 
   const selectedDeviceId = useSelector((state) => state.devices.selectedId);
-  const positions = useSelector((state) => state.session.positions);
+  const positions = useSelector((state) => state.positions.items);
   const [filteredPositions, setFilteredPositions] = useState([]);
   const selectedPosition = filteredPositions.find((position) => selectedDeviceId && position.deviceId === selectedDeviceId);
 
   const [filteredDevices, setFilteredDevices] = useState([]);
 
-  const [keyword, setKeyword] = useState('');
-  const [filter, setFilter] = usePersistedState('filter', {
+  const [filter, setFilter] = useState({
+    keyword: '',
     statuses: [],
     groups: [],
   });
@@ -92,7 +91,7 @@ const MainPage = () => {
     }
   }, [desktop, mapOnSelect, selectedDeviceId]);
 
-  useFilter(keyword, filter, filterSort, filterMap, positions, setFilteredDevices, setFilteredPositions);
+  useFilter(filter, filterSort, filterMap, positions, setFilteredDevices, setFilteredPositions);
 
   return (
     <div className={classes.root}>
@@ -109,8 +108,6 @@ const MainPage = () => {
             filteredDevices={filteredDevices}
             devicesOpen={devicesOpen}
             setDevicesOpen={setDevicesOpen}
-            keyword={keyword}
-            setKeyword={setKeyword}
             filter={filter}
             setFilter={setFilter}
             filterSort={filterSort}

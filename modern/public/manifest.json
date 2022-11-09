@@ -1,9 +1,9 @@
 {
-  "short_name": "Traccar",
-  "name": "Traccar GPS Tracking System",
+  "short_name": "Visionsky",
+  "name": "Visionsky GPS Tracking System",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "visionsky.ico",
       "sizes": "48x48 32x32 16x16",
       "type": "image/x-icon"
     },

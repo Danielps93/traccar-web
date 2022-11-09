@@ -31,8 +31,6 @@ const MainToolbar = ({
   filteredDevices,
   devicesOpen,
   setDevicesOpen,
-  keyword,
-  setKeyword,
   filter,
   setFilter,
   filterSort,
@@ -65,8 +63,8 @@ const MainToolbar = ({
       <OutlinedInput
         ref={inputRef}
         placeholder={t('sharedSearchDevices')}
-        value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
+        value={filter.keyword}
+        onChange={(e) => setFilter({ ...filter, keyword: e.target.value })}
         onFocus={() => setDevicesAnchorEl(toolbarRef.current)}
         onBlur={() => setDevicesAnchorEl(null)}
         endAdornment={(

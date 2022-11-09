@@ -16,6 +16,6 @@
  */
 
 Ext.application({
-    name: 'Traccar',
+    name: 'Visionsky',
     extend: 'Traccar.Application'
 });

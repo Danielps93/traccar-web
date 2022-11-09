@@ -1,5 +1,5 @@
 import { useId, useEffect } from 'react';
-import { useAttributePreference } from '../../common/util/preferences';
+import usePersistedState from '../../common/util/usePersistedState';
 import { map } from '../core/MapView';
 import useMapOverlays from './useMapOverlays';
 
@@ -7,7 +7,7 @@ const MapOverlay = () => {
   const id = useId();
 
   const mapOverlays = useMapOverlays();
-  const selectedMapOverlay = useAttributePreference('selectedMapOverlay');
+  const [selectedMapOverlay] = usePersistedState('selectedMapOverlay');
 
   const activeOverlay = mapOverlays.filter((overlay) => overlay.available).find((overlay) => overlay.id === selectedMapOverlay);
 

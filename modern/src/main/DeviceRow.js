@@ -19,8 +19,8 @@ import {
 import { useTranslation } from '../common/components/LocalizationProvider';
 import { mapIconKey, mapIcons } from '../map/core/preloadImages';
 import { useAdministrator } from '../common/util/permissions';
+import usePersistedState from '../common/util/usePersistedState';
 import { ReactComponent as EngineIcon } from '../resources/images/data/engine.svg';
-import { useAttributePreference } from '../common/util/preferences';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -55,12 +55,12 @@ const DeviceRow = ({ data, index, style }) => {
   const admin = useAdministrator();
 
   const item = data[index];
-  const position = useSelector((state) => state.session.positions[item.id]);
+  const position = useSelector((state) => state.positions.items[item.id]);
 
   const geofences = useSelector((state) => state.geofences.items);
 
-  const devicePrimary = useAttributePreference('devicePrimary', 'name');
-  const deviceSecondary = useAttributePreference('deviceSecondary', '');
+  const [devicePrimary] = usePersistedState('devicePrimary', 'name');
+  const [deviceSecondary] = usePersistedState('deviceSecondary', '');
 
   const formatProperty = (key) => {
     if (key === 'geofenceIds') {

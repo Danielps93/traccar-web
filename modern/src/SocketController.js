@@ -1,21 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { Snackbar } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-import { devicesActions, sessionActions } from './store';
+import { positionsActions, devicesActions, sessionActions } from './store';
 import { useEffectAsync } from './reactHelper';
 import { useTranslation } from './common/components/LocalizationProvider';
 import { snackBarDurationLongMs } from './common/util/duration';
+import usePersistedState from './common/util/usePersistedState';
 
 import alarm from './resources/alarm.mp3';
 import { eventsActions } from './store/events';
 import useFeatures from './common/util/useFeatures';
-import { useAttributePreference } from './common/util/preferences';
 
 const logoutCode = 4000;
 
 const SocketController = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const t = useTranslation();
 
   const authenticated = useSelector((state) => !!state.session.user);
@@ -26,8 +28,8 @@ const SocketController = () => {
   const [events, setEvents] = useState([]);
   const [notifications, setNotifications] = useState([]);
 
-  const soundEvents = useAttributePreference('soundEvents', '');
-  const soundAlarms = useAttributePreference('soundAlarms', 'sos');
+  const [soundEvents] = usePersistedState('soundEvents', []);
+  const [soundAlarms] = usePersistedState('soundAlarms', ['sos']);
 
   const features = useFeatures();
 
@@ -52,7 +54,7 @@ const SocketController = () => {
             headers: { 'Content-Type': 'application/json' },
           });
           if (positionsResponse.ok) {
-            dispatch(sessionActions.updatePositions(await positionsResponse.json()));
+            dispatch(positionsActions.update(await positionsResponse.json()));
           }
         } catch (error) {
           // ignore errors
@@ -67,7 +69,7 @@ const SocketController = () => {
         dispatch(devicesActions.update(data.devices));
       }
       if (data.positions) {
-        dispatch(sessionActions.updatePositions(data.positions));
+        dispatch(positionsActions.update(data.positions));
       }
       if (data.events) {
         if (!features.disableEvents) {
@@ -93,6 +95,12 @@ const SocketController = () => {
           socket.close(logoutCode);
         }
       };
+    }
+    const response = await fetch('/api/session');
+    if (response.ok) {
+      dispatch(sessionActions.updateUser(await response.json()));
+    } else {
+      navigate('/login');
     }
     return null;
   }, [authenticated]);

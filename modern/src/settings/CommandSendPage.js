@@ -101,7 +101,7 @@ const CommandSendPage = () => {
               label={t('sharedSavedCommand')}
             />
             {!limitCommands && !savedId && (
-              <BaseCommandView deviceId={deviceId} item={item} setItem={setItem} />
+              <BaseCommandView item={item} setItem={setItem} />
             )}
           </AccordionDetails>
         </Accordion>

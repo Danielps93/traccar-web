@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import dimensions from '../../common/theme/dimensions';
 import { map } from '../core/MapView';
 import { usePrevious } from '../../reactHelper';
+import usePersistedState from '../../common/util/usePersistedState';
 import { useAttributePreference } from '../../common/util/preferences';
 
 const MapSelectedDevice = () => {
@@ -11,9 +12,10 @@ const MapSelectedDevice = () => {
   const previousDeviceId = usePrevious(selectedDeviceId);
 
   const selectZoom = useAttributePreference('web.selectZoom', 10);
-  const mapFollow = useAttributePreference('mapFollow', false);
 
-  const position = useSelector((state) => state.session.positions[selectedDeviceId]);
+  const position = useSelector((state) => state.positions.items[selectedDeviceId]);
+
+  const [mapFollow] = usePersistedState('mapFollow', false);
 
   useEffect(() => {
     if ((selectedDeviceId !== previousDeviceId || mapFollow) && position) {
