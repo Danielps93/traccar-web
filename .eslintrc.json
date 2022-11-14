@@ -57,6 +57,6 @@
         "no-bitwise": "off",
         "prefer-rest-params": "off",
         "function-paren-newline": "off",
-        "linebreak-style": ["error",  "windows"]
+        "linebreak-style": ["error", "windows"]
     }
 }
